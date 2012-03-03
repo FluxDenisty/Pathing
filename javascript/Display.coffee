@@ -2,7 +2,7 @@ class window.Display
   constructor: ({@model, @ctx, @canvas}) ->
     @draw()
 
-  @draw: ->
+  draw: ->
     ## DRAW BACKGROUND ##
     x = @canvas.width() / 2
     y = @canvas.height() / 2
@@ -13,18 +13,29 @@ class window.Display
     @ctx.fillRect(0, 0, @canvas.width() ,@canvas.height())
 
     ## DRAW POINTS ##
+    @ctx.save()
     points = @model.points
     if points.length == 1
-      @ctx.fillStyle = "#8000FF"
+      points[0].draw(@ctx)
+    else if points.length > 1
+      @ctx.strokeStyle = "#8000FF"
       @ctx.beginPath()
-      @ctx.arc(points[0].x, points[0].y, 3, 0, Math.PI * 2, false)
-      @ctx.fill
+      @ctx.moveTo(points[points.length - 1].x, points[points.length - 1].y)
+      for point in points
+        @ctx.lineTo(point.x, point.y)
+      @ctx.stroke()
+    @ctx.restore()
 
-    requestAnimFrame @draw
+    ## DRAW SHAPES ##
+    @ctx.save()
+    for shape in @model.shapes
+      shape.draw(@ctx)
+    @ctx.restore()
+
+    requestAnimFrame => @draw()
 
 
-window.requestAnimFrame = (callback) ->
-    return window.requestAnimationFrame ||
+window.requestAnimFrame = window.requestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
     window.mozRequestAnimationFrame ||
     window.oRequestAnimationFrame ||

@@ -1,15 +1,15 @@
 class window.Controller
   constructor: ({@model, @canvas}) ->
-    foo = @clicked
-    @canvas.click (e) ->
-      foo({x:e.offsetX, y:e.offsetY})
+    @canvas.click (e) =>
+      @clicked({x:e.offsetX, y:e.offsetY})
 
-    $(window).keypress (e) ->
+    $(window).keypress (e) =>
       switch e.charCode
         when 32
-          alert("place")
+          @model.setShape()
           break
         else
 
-  @clicked: ({x, y}) ->
+  clicked: ({x, y}) ->
+    console.log @model
     @model.addPoint( new Point({x,y}) )
