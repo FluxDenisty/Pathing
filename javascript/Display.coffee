@@ -38,7 +38,7 @@ class window.Display
 
 
     ## DRAW EDGES ##
-    if @drawGraph || true
+    if @drawGraph
       @ctx.save()
       for edge in @model.edges
         edge.draw(@ctx)

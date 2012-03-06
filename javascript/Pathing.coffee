@@ -57,6 +57,8 @@ class window.Pathing
     return @getConnection(one, two)?
 
   getConnection: (one, two) ->
+    if (one == two)
+      return undefined
     for edge in one.edges
       if (edge.two == one && edge.one == two)
         return edge
@@ -71,18 +73,53 @@ class window.Pathing
       @from = point
       @connectPoint @from
       @allPoints.push @from
-      @from.weight = 0
-    else if !@to?
+    else
+      if @to?
+        @from = @to
       @to = point
       @connectPoint @to
       @allPoints.push @to
-      createPath()
-    else
-      #totaly different case
+      @createPath()
 
   createPath: ->
-    outGoing = @from.edges
+    for point in @allPoints
+      point.weight = undefined
+      point.parent = undefined
+      point.state = "none"
+    @from.weight = 0
+    finished = []
+    while finished.length < @allPoints.length
+      # get unfinished point with lowest distance
+      y = undefined
+      for point in @allPoints
+        if point.state != "done"
+          if !y? && point.weight? || y?.weight? && y.weight > point.weight
+            y = point
+      console.log "Pulling item with weight:" + y.weight
+      # point has shortest path
+      y.state = "done"
+      finished.push y
+      for z in @allPoints
+        edge = @getConnection(y, z)
+        if edge?
+          #check if shorter path found
+          if !z.weight? || y.weight + edge.weight < z.weight
+            z.weight = y.weight + edge.weight
+            z.parent = y
+    # create path
+    point = @to
+    while point.parent?
+      @path.push new Edge(point, point.parent)
+      point = point.parent
 
+
+  compare: (a, b) ->
+    if a.weight < b.weight
+      return -1
+    else if a.weight > b.weight
+      return 1
+    else
+      return 0
 
 
 
@@ -91,6 +128,8 @@ class window.Point
     @edges = []
     @shape = undefined
     @weight = undefined
+    @parent = undefined
+    @state = "none"
 
   addEdge: (edge) ->
     @edges.push edge
