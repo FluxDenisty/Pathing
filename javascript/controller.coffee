@@ -1,5 +1,6 @@
 class window.Controller
   constructor: ({@model, @canvas}) ->
+    @mode = "create"
     @canvas.click (e) =>
       @canvasClicked({x:e.offsetX, y:e.offsetY})
     $("#connectButton").click (e) =>
@@ -12,8 +13,16 @@ class window.Controller
           break
         else
 
+  setView: (@view) ->
+
   canvasClicked: ({x, y}) ->
-    @model.addPoint( new Point({x,y}) )
+    if @mode == "create"
+      @model.addPoint( new Point({x,y}) )
+    else if @mode == "path"
+      @model.pathPoint( new Point({x,y}) )
 
   connectClicked: ->
-    @model.connectGraph()
+    if @mode = "create"
+      @mode = "path"
+      @view.drawGraph = false
+      @model.connectGraph()
