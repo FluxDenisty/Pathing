@@ -27,6 +27,9 @@ body {
 HAHAHAHAHAH no.
 </canvas>
 </center>
+<center>
+<button id="connectButton">Connect Visible Points</button>
+</center>
 </body>
 </html>
 

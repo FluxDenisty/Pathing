@@ -14,7 +14,7 @@ class window.Display
 
     ## DRAW POINTS ##
     @ctx.save()
-    points = @model.points
+    points = @model.currentPoints
     if points.length == 1
       points[0].draw(@ctx)
     else if points.length > 1
@@ -32,13 +32,20 @@ class window.Display
       shape.draw(@ctx)
     @ctx.restore()
 
+
+    ## DRAW EDGES ##
+    @ctx.save()
+    for edge in @model.edges
+      edge.draw(@ctx)
+    @ctx.restore()
+
     requestAnimFrame => @draw()
 
-
+#TODO: this is overdrawing. Something is broken
 window.requestAnimFrame = window.requestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
     window.mozRequestAnimationFrame ||
     window.oRequestAnimationFrame ||
     window.msRequestAnimationFrame ||
     (callback) ->
-        window.setTimeout(callback, 1000 / 60);
+        window.setTimeout(callback, 1000 / 30);

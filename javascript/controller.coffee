@@ -1,7 +1,9 @@
 class window.Controller
   constructor: ({@model, @canvas}) ->
     @canvas.click (e) =>
-      @clicked({x:e.offsetX, y:e.offsetY})
+      @canvasClicked({x:e.offsetX, y:e.offsetY})
+    $("#connectButton").click (e) =>
+      @connectClicked()
 
     $(window).keypress (e) =>
       switch e.charCode
@@ -10,6 +12,8 @@ class window.Controller
           break
         else
 
-  clicked: ({x, y}) ->
-    console.log @model
+  canvasClicked: ({x, y}) ->
     @model.addPoint( new Point({x,y}) )
+
+  connectClicked: ->
+    @model.connectGraph()
