@@ -3,6 +3,10 @@ class window.Display
     @drawGraph = true
     @draw()
 
+  modelChanged: ->
+    console.log "ModelChanged called"
+    @draw()
+
   draw: ->
     ## DRAW BACKGROUND ##
     if !@radgrad?
@@ -50,7 +54,7 @@ class window.Display
       edge.draw(@ctx)
     @ctx.restore()
 
-    requestAnimFrame => @draw()
+    # requestAnimFrame => @draw()
 
 #TODO: this is overdrawing. Something is broken
 window.requestAnimFrame = window.requestAnimationFrame ||

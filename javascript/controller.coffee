@@ -19,10 +19,10 @@ class window.Controller
     if @mode == "create"
       @model.addPoint( new Point({x,y}) )
     else if @mode == "path"
+      @view.drawGraph = false
       @model.pathPoint( new Point({x,y}) )
 
   connectClicked: ->
     if @mode = "create"
       @mode = "path"
-      @view.drawGraph = false
       @model.connectGraph()

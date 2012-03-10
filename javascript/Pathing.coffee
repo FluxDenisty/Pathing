@@ -13,6 +13,7 @@ class window.Pathing
   addPoint: (point) ->
     @currentPoints.push point
     @allPoints.push point
+    @view.modelChanged()
 
   addEdge: (edge) ->
     @edges.push edge
@@ -21,6 +22,7 @@ class window.Pathing
     if (@currentPoints.length > 2)
       @shapes.push new Polygon( @currentPoints )
     @currentPoints = []
+    @view.modelChanged()
 
   ## CONNECTION CODE ##
 
@@ -33,6 +35,7 @@ class window.Pathing
       @connectShape shape
     for point in @allPoints
       @connectPoint point
+    @view.modelChanged()
 
   connectShape: (shape) ->
     prev = shape.points[shape.points.length - 1]
@@ -80,6 +83,7 @@ class window.Pathing
       @connectPoint @to
       @allPoints.push @to
       @createPath()
+    @view.modelChanged()
 
   createPath: ->
     for point in @allPoints
@@ -95,7 +99,9 @@ class window.Pathing
         if point.state != "done"
           if !y? && point.weight? || y?.weight? && y.weight > point.weight
             y = point
-      console.log "Pulling item with weight:" + y.weight
+      if !y?
+        console.log "SOMETHING BROKE"
+        return
       # point has shortest path
       y.state = "done"
       finished.push y
